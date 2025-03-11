@@ -1,0 +1,60 @@
+name: Ishikawa Checklist Analysis
+
+permissions:
+  contents: write
+  issues: read
+
+on:
+  schedule:
+    - cron: "0 12 1 * *" # Ejecutar al inicio de cada mes
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  ishikawa_checklist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas matplotlib
+
+      - name: Fetch issue data for checklist
+        run: |
+          issues=$(curl -s -H "Authorization: token ${{ secrets.GIT_PAT }}" "https://api.github.com/repos/${{ github.repository }}/issues?state=all&per_page=100")
+          echo "$issues" > issues.json
+          echo "ISSUES_FILE=issues.json" >> $GITHUB_ENV
+
+      - name: Print issues.json content
+        run: |
+          cat issues.json
+
+      - name: Generate Ishikawa Checklist (March 2025)
+        run: |
+          python .github/scripts/generate_checklist.py
+
+      - name: Check if Ishikawa checklist is generated
+        run: |
+          if [ -f "generate_checklist.json" ]; then echo "Ishikawa checklist generated"; else echo "Ishikawa checklist not found"; fi
+
+      - name: Commit and push Ishikawa checklist
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add generate_checklist.json
+          git commit -m 'Update Ishikawa checklist for March 2025' || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }} || echo "No changes to push"
