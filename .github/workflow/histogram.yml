@@ -1,6 +1,6 @@
 name: DevOps Label Histogram Analysis
 permissions:
-  contents: read
+  contents: write  # Changed from read to write to allow pushing changes
   issues: read
 on:
   schedule:
@@ -17,22 +17,36 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for proper git operations
+      
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+      
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests matplotlib
+      
       - name: Run histogram generator
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           python .github/scripts/generator_histogram.py
+      
+      - name: Create ishikawa directory if it doesn't exist
+        run: |
+          mkdir -p ishikawa
+      
+      - name: Move generated histogram
+        run: |
+          mv generator_histogram_M*.png ishikawa/
+      
       - name: Upload histogram as artifact
         uses: actions/upload-artifact@v4
         with:
           name: devops-histogram
-          path: generator_histogram_M*.png
+          path: ishikawa/generator_histogram_M*.png
           retention-days: 90  # Keep artifacts for 90 days
