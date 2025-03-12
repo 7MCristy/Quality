@@ -25,15 +25,14 @@ else:
     print("Warning: No GITHUB_TOKEN provided. Using unauthenticated requests (limited rate).")
 
 # Labels to track
-devops_labels = [
-    {"name": "Plan", "color": "0052cc", "description": "Planning phase tasks"},
-    {"name": "Code", "color": "006b75", "description": "Coding phase tasks"},
-    {"name": "Build", "color": "ff9f1c", "description": "Build phase tasks"},
-    {"name": "Test", "color": "e99695", "description": "Testing phase tasks"},
-    {"name": "Release", "color": "bfd4f2", "description": "Release phase tasks"},
-    {"name": "Deploy", "color": "7057ff", "description": "Deployment phase tasks"},
-    {"name": "Operate", "color": "008672", "description": "Operation phase tasks"},
-    {"name": "Monitor", "color": "d73a4a", "description": "Monitoring phase tasks"},
+labels = [
+    {"name": "back-end", "color": "5319e7", "description": "Backend development tasks"},
+    {"name": "bug", "color": "d93f0b", "description": "Issues that represent bugs or errors"},
+    {"name": "database", "color": "0e8a16", "description": "Database-related tasks and issues"},
+    {"name": "documentation", "color": "1d76db", "description": "Documentation updates and improvements"},
+    {"name": "front-end", "color": "fbca04", "description": "Frontend development tasks"},
+    {"name": "tests", "color": "b60205", "description": "Test creation and maintenance"},
+    {"name": "wontfix", "color": "5d5d5d", "description": "Issues that won't be addressed"},
 ]
 
 # Additional labels to track
