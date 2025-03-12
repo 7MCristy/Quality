@@ -9,7 +9,7 @@ GITHUB_REPOSITORY = os.environ.get("GITHUB_REPOSITORY", "")  # This env var is s
 
 # If not running in Actions, allow fallback for local development
 if not GITHUB_REPOSITORY:
-    GITHUB_REPOSITORY = "ainhprzz/BetterHealthProject"  # Default value for local development
+    GITHUB_REPOSITORY = "usuario/repositorio"  # Default value for local development
     print(f"Warning: GITHUB_REPOSITORY not found. Using default value: {GITHUB_REPOSITORY}")
 
 GITHUB_API_URL = f"https://api.github.com/repos/{GITHUB_REPOSITORY}"
@@ -18,10 +18,10 @@ GITHUB_API_URL = f"https://api.github.com/repos/{GITHUB_REPOSITORY}"
 headers = {}
 if GITHUB_TOKEN:
     headers["Authorization"] = f"token {GITHUB_TOKEN}"
-    headers["Accept"] = "application/vnd.github.v3+json"
+    headers["Accept"] = "application/vnd.github.v4+json"
 else:
     # We can still make some unauthenticated requests, with lower rate limits
-    headers["Accept"] = "application/vnd.github.v3+json"
+    headers["Accept"] = "application/vnd.github.v4+json"
     print("Warning: No GITHUB_TOKEN provided. Using unauthenticated requests (limited rate).")
 
 # Labels to track
